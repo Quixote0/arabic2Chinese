@@ -42,11 +42,11 @@ static void convert(char part[5], char* result)
     }
     for (int i = start; i < 4; i++)
     {
-        if (!num[i])
+		if (!num[i])
         {
             flag++;
             continue;
-        }
+		}
         if (flag)
         {
             strcat(result, cNum[0]);
@@ -55,6 +55,7 @@ static void convert(char part[5], char* result)
         if (!(partLength == 2 && i == 2 && num[i] == 1)) strcat(result, cNum[num[i]]);
         if (num[i]) strcat(result, unit[3 - i]);
     }
+    flag = 0;
 }
 /// <summary>
 /// 阿拉伯数字转中文数字，支持12位及以内的正整数
