@@ -1,12 +1,14 @@
 #include"./head.h"
-static const char* cNum[] = { "零", "一", "二", "三", "四", "五", "六", "七", "八", "九" };
-static const char* unit[] = { "","十","百","千" };
-static const char* bigUnit[] = { "","万","亿" };
-static int flag = 0;
+char result[32] = { 0 };//存储转换后的结果，可根据需要转换的数字适当增加/减少数组长度
+const char* cNum[] = { "零", "一", "二", "三", "四", "五", "六", "七", "八", "九" };
+const char* unit[] = { "","十","百","千" };
+const char* bigUnit[] = { "","万","亿"};//可往后添加更大的单位，相邻单位的进制为1000。若增加了单位，请注意result数组的长度与之相匹配
+const int maxLength = 4 * sizeof(bigUnit) / sizeof(bigUnit[0]);
+int flag = 0;
 //检查输入字符串的合法性，必须都由阿拉伯数字组成且最高位不为0，支持12位及以内正整数
 static int check(char* num)
 {
-    if (strlen(num) > 12 || strlen == 0) return 1;
+    if (strlen(num) > maxLength || strlen == 0) return 1;
     if ('0' == *num) return 1;
     char* pnum = num;
     while (*pnum)
@@ -61,7 +63,6 @@ static void convert(char part[5], char* result)
 /// <returns>结果由静态数组保存，返回char*</returns>
 char* arabic2Chinese(char* num)
 {
-    static char result[32] = { 0 };//存储最后的结果
     memset(result, 0, sizeof(result));//清除上一次的数据
 
     if (check(num)) return NULL;
