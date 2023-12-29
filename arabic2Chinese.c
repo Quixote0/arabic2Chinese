@@ -1,11 +1,11 @@
 #include"./head.h"
-char result[32] = { 0 };//存储转换后的结果，可根据需要转换的数字适当增加/减少数组长度
+char result[50] = { 0 };//存储转换后的结果，可根据需要转换的数字适当增加/减少数组长度
 const char* cNum[] = { "零", "一", "二", "三", "四", "五", "六", "七", "八", "九" };
 const char* unit[] = { "","十","百","千" };
-const char* bigUnit[] = { "","万","亿"};//可往后添加更大的单位，相邻单位的进制为1000。若增加了单位，请注意result数组的长度与之相匹配
+const char* bigUnit[] = { "","万","亿"};//可往后添加更大的单位，相邻单位的进制为1000。若增加了单位，请注意result数组的长度要与之相匹配
 const int maxLength = 4 * sizeof(bigUnit) / sizeof(bigUnit[0]);
 int flag = 0;
-//检查输入字符串的合法性，必须都由阿拉伯数字组成且最高位不为0，支持12位及以内正整数
+//检查输入字符串的合法性，必须都由阿拉伯数字组成且最高位不为0，长度不超过maxLength
 static int check(char* num)
 {
     if (strlen(num) > maxLength || strlen == 0) return 1;
@@ -27,23 +27,19 @@ static void convert(char part[5], char* result)
         return;
     }
     //num[0]千位  num[1]百位  num[2]十位  num[3]个位
-    int num[4] = { 0 };
-    int partLength = (int)strlen(part);
-    //可能不足4位，高位补0
-    for (int i = 0; i < partLength; i++)
-    {
-        num[3 - i] = part[partLength - 1 - i] - 48;
-    }
-    int start = 0;
-    if (partLength < 4)
-    {
-        //不足4位，高位的0不读
-        start = 4 - partLength;
-    }
-    for (int i = start; i < 4; i++)
-    {
+	int num[4] = { 0 };
+	int partLength = (int)strlen(part);
+	//可能不足4位，倒的赋值，高位为0
+	int i = 0;
+	for (; i < partLength; i++)
+	{
+		num[3 - i] = part[partLength - 1 - i] - 48;
+	}
+    //若不足4位，高位的0跳过
+	for (i = partLength < 4 ? 4 - partLength : 0; i < 4; i++)
+	{
 		if (!num[i])
-        {
+		{
             flag++;
             continue;
 		}
@@ -83,7 +79,7 @@ char* arabic2Chinese(char* num)
     {
         strncpy(part, pnum, 4);
         convert(part, result);
-        if (strcmp(part, "0000")) strcat(result, bigUnit[col - 1 - i]);
+        if (!flag) strcat(result, bigUnit[col - 1 - i]);//四个0则不带单位
         memset(part, 0, sizeof(part));
         pnum += 4;
     }
